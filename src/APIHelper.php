@@ -9,6 +9,16 @@ namespace TaplyticsLib;
 
 use InvalidArgumentException;
 use JsonSerializable;
+use TaplyticsLib\APIException;
+use TaplyticsLib\APIHelper;
+use TaplyticsLib\Configuration;
+use TaplyticsLib\Models;
+use TaplyticsLib\Exceptions;
+use TaplyticsLib\Http\HttpRequest;
+use TaplyticsLib\Http\HttpResponse;
+use TaplyticsLib\Http\HttpMethod;
+use TaplyticsLib\Http\HttpContext;
+use Unirest\Request;
 
 /**
  * API utility class
@@ -21,7 +31,7 @@ class APIHelper
     * @param    array   $parameters  The parameters to replace in the url
     * @return   string  The processed url
     */
-    public static function appendUrlWithTemplateParameters($url, $parameters)
+    public function appendUrlWithTemplateParameters($url, $parameters)
     {
         //perform parameter validation
         if (is_null($url) || !is_string($url)) {
@@ -58,7 +68,7 @@ class APIHelper
     * @param    array   $parameters     The parameters to append
     * @return   void
     */
-    public static function appendUrlWithQueryParameters(&$queryBuilder, $parameters)
+    public function appendUrlWithQueryParameters(&$queryBuilder, $parameters)
     {
         //perform parameter validation
         if (is_null($queryBuilder) || !is_string($queryBuilder)) {
@@ -110,7 +120,7 @@ class APIHelper
      * @param  boolean  $isArray    Is the Json an object array?
      * @return mixed                Decoded Json
      */
-    public static function deserialize($json, $instance = null, $isArray = false)
+    public function deserialize($json, $instance = null, $isArray = false)
     {
         if ($instance == null) {
             return json_decode($json, true);
@@ -145,7 +155,7 @@ class APIHelper
      * @param  JsonSerializable  $model  A valid instance of JsonSerializable
      * @return array                     The model as a map of key value pairs
      */
-    public static function prepareFormFields($model)
+    public function prepareFormFields($model)
     {
         if (!$model instanceof JsonSerializable) {
             return $model;
@@ -167,4 +177,46 @@ class APIHelper
         }
         return $arr;
     }
+
+    public function createRequest($url, $params, $body) {
+
+        if ($body == null) {
+            $body = new Request\Body();
+        }
+
+        //process optional query parameters
+        $this->appendUrlWithQueryParameters($url, $params);
+
+        //validate and preprocess url
+        $_queryUrl = $this->cleanUrl($url);
+
+        //prepare headers
+        $_headers = array (
+            'user-agent'    => 'taplytics',
+            'Accept'        => 'application/json',
+            'content-type'  => 'application/json; charset=utf-8'
+        );
+
+        //call on-before Http callback
+        $_httpRequest = new HttpRequest(HttpMethod::POST, $_headers, $_queryUrl);
+
+        //and invoke the API call request to fetch the response
+        $response = Request::post($_queryUrl, $_headers, Request\Body::Json($body));
+
+        $_httpResponse = new HttpResponse($response->code, $response->headers, $response->raw_body);
+        $_httpContext = new HttpContext($_httpRequest, $_httpResponse);
+
+        //handle errors defined at the API level
+        $this->validateResponse($_httpResponse, $_httpContext);
+
+        return $response->body;
+    }
+
+    public function validateResponse(HttpResponse $response, HttpContext $_httpContext)
+    {
+        if (($response->getStatusCode() < 200) || ($response->getStatusCode() > 208)) { //[200,208] = HTTP OK
+            throw new APIException('HTTP Response Not OK', $_httpContext);
+        }
+    }
+
 }

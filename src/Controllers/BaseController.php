@@ -26,10 +26,6 @@ class BaseController
      */
     private $httpCallBack = null;
 
-     /**
-     * Constructor that sets the timeout of requests
-     */
-
     /**
      * Set HttpCallBack for this controller
      * @param HttpCallBack $httpCallBack Http Callbacks called before/after each API call
@@ -56,12 +52,5 @@ class BaseController
     {
         $mapper = new JsonMapper();
         return $mapper;
-    }
-
-    protected function validateResponse(HttpResponse $response, HttpContext $_httpContext)
-    {
-        if (($response->getStatusCode() < 200) || ($response->getStatusCode() > 208)) { //[200,208] = HTTP OK
-            throw new APIException('HTTP Response Not OK', $_httpContext);
-        }
     }
 }

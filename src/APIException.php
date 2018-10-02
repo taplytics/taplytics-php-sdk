@@ -8,7 +8,7 @@
 namespace TaplyticsLib;
 
 use Exception;
-
+use Http\HttpContext;
 /**
  * Class for exceptions when there is a network error, status code error, etc.
  */
@@ -29,8 +29,7 @@ class APIException extends Exception
     /**
      * The HTTP response code from the API request
      * @param string $reason the reason for raising an exception
-     * @param int $responseCode the HTTP response code from the API request
-     * @param string $responseBody the HTTP response body from the API request
+     * @param HttpContext $context the HTTP context
      */
     public function __construct($reason, $context)
     {
