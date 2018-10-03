@@ -1,7 +1,6 @@
 {
     "name": "taplytics/decisions",
     "type": "library",
-    "version":0.4,
     "description": "Taplytics decisions is an API to quickly use Taplytics features and functionality at edge.",
     "keywords": ["Taplytics Decisions API","API","SDK"],
     "homepage": "http://decisions-docs.taplytics.com",
@@ -29,5 +28,6 @@
         "psr-4": {
             "TaplyticsLib\\": "src/"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
