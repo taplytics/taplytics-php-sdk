@@ -3,13 +3,13 @@
     "type": "library",
     "description": "Taplytics decisions is an API to quickly use Taplytics features and functionality at edge.",
     "keywords": ["Taplytics Decisions API","API","SDK"],
-    "homepage": "https://apimatic.io",
-    "license": "MIT",
+    "homepage": "http://decisions-docs.taplytics.com",
+    "license": "http://taplytics.com/license",
     "authors": [
         {
-            "name": "APIMatic SDK Generator",
-            "email": "support@apimatic.io",
-            "homepage": "https://apimatic.io",
+            "name": "Taplytics",
+            "email": "vic@taplytics.com",
+            "homepage": "https://taplytics.com",
             "role": "API Tool"
         }
     ],
