@@ -1,8 +1,8 @@
 {
-    "name": "taplytics/decisions",
+    "name": "taplytics/taplytics-php",
     "type": "library",
-    "description": "Taplytics decisions is an API to quickly use Taplytics features and functionality at edge.",
-    "keywords": ["Taplytics Decisions API","API","SDK"],
+    "description": "Taplytics PHP SDK for fast A/B testing and Feature Flagging",
+    "keywords": ["Taplytics Decisions API","API","PHP","SDK"],
     "homepage": "http://decisions-docs.taplytics.com",
     "license": "http://taplytics.com/license",
     "authors": [
@@ -22,7 +22,9 @@
         "apimatic/jsonmapper": "~1.3.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^2.7"
+        "squizlabs/php_codesniffer": "^2.7",
+        "phpunit/phpunit": "^7",
+        "mockery/mockery": "dev-master"
     },
     "autoload": {
         "psr-4": {

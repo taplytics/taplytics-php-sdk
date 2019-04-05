@@ -20,6 +20,6 @@ class TaplyticsClient
      */
     public function getClient()
     {
-        return Controllers\APIController::getInstance();
+        return new Controllers\APIController();
     }
 }

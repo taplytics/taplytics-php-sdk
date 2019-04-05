@@ -19,26 +19,21 @@ use TaplyticsLib\Http\HttpContext;
 use Unirest\Request;
 
 /**
- * @todo Add a general description for this controller.
+ * API methods defined
  */
 class APIController extends BaseController
 {
-    /**
-     * @var APIController The reference to *Singleton* instance of this class
-     */
-    private static $instance;
 
     /**
-     * Returns the *Singleton* instance of this class.
-     * @return APIController The *Singleton* instance.
+     * @var APIHelper instance of APIHelper
      */
-    public static function getInstance()
-    {
-        if (null === static::$instance) {
-            static::$instance = new static();
+    private $apiHelper;
+
+    function __construct($APIHelper = null) {
+        if ($APIHelper == null) {
+            $APIHelper = new APIHelper();
         }
-        
-        return static::$instance;
+        $this->apiHelper = $APIHelper;
     }
 
     /**
@@ -62,45 +57,14 @@ class APIController extends BaseController
         //prepare query string for API call
         $_queryBuilder = $_queryBuilder.'/variables';
 
-        //process optional query parameters
-        APIHelper::appendUrlWithQueryParameters($_queryBuilder, array (
-            'token'   => $token,
-            'user_id' => $userId,
-        ));
-
-        //validate and preprocess url
-        $_queryUrl = APIHelper::cleanUrl($_queryBuilder);
-
-        //prepare headers
-        $_headers = array (
-            'user-agent'    => 'taplytics',
-            'Accept'        => 'application/json',
-            'content-type'  => 'application/json; charset=utf-8'
-        );
-
-        //call on-before Http callback
-        $_httpRequest = new HttpRequest(HttpMethod::POST, $_headers, $_queryUrl);
-        if ($this->getHttpCallBack() != null) {
-            $this->getHttpCallBack()->callOnBeforeRequest($_httpRequest);
-        }
-
-        //and invoke the API call request to fetch the response
-        $response = Request::post($_queryUrl, $_headers, Request\Body::Json($body));
-
-        $_httpResponse = new HttpResponse($response->code, $response->headers, $response->raw_body);
-        $_httpContext = new HttpContext($_httpRequest, $_httpResponse);
-
-        //call on-after Http callback
-        if ($this->getHttpCallBack() != null) {
-            $this->getHttpCallBack()->callOnAfterRequest($_httpContext);
-        }
-
-        //handle errors defined at the API level
-        $this->validateResponse($_httpResponse, $_httpContext);
-
-        $mapper = $this->getJsonMapper();
-
-        return $mapper->mapClassArray($response->body, 'TaplyticsLib\\Models\\Variable');
+        $variables = $this->apiHelper->createRequest(
+            $_queryBuilder, 
+            array (
+                'token'   => $token,
+                'user_id' => $userId,
+            ), 
+        $body);
+        return $variables;
     }
 
     /**
@@ -127,43 +91,11 @@ class APIController extends BaseController
         //prepare query string for API call
         $_queryBuilder = $_queryBuilder.'/variation';
 
-        //process optional query parameters
-        APIHelper::appendUrlWithQueryParameters($_queryBuilder, array (
+        return $this->apiHelper->createRequest($_queryBuilder, array (
             'token'          => $token,
             'user_id'        => $userId,
             'experimentName' => $experimentName,
-        ));
-
-        //validate and preprocess url
-        $_queryUrl = APIHelper::cleanUrl($_queryBuilder);
-
-        //prepare headers
-        $_headers = array (
-            'user-agent'    => 'taplytics',
-            'content-type'  => 'application/json; charset=utf-8'
-        );
-
-        //call on-before Http callback
-        $_httpRequest = new HttpRequest(HttpMethod::POST, $_headers, $_queryUrl);
-        if ($this->getHttpCallBack() != null) {
-            $this->getHttpCallBack()->callOnBeforeRequest($_httpRequest);
-        }
-
-        //and invoke the API call request to fetch the response
-        $response = Request::post($_queryUrl, $_headers, Request\Body::Json($body));
-
-        $_httpResponse = new HttpResponse($response->code, $response->headers, $response->raw_body);
-        $_httpContext = new HttpContext($_httpRequest, $_httpResponse);
-
-        //call on-after Http callback
-        if ($this->getHttpCallBack() != null) {
-            $this->getHttpCallBack()->callOnAfterRequest($_httpContext);
-        }
-
-        //handle errors defined at the API level
-        $this->validateResponse($_httpResponse, $_httpContext);
-
-        return $response->body;
+        ), $body);
     }
 
     /**
@@ -192,45 +124,12 @@ class APIController extends BaseController
         //prepare query string for API call
         $_queryBuilder = $_queryBuilder.'/variablevalue';
 
-        //process optional query parameters
-        APIHelper::appendUrlWithQueryParameters($_queryBuilder, array (
+        return $this->apiHelper->createRequest($_queryBuilder, array (
             'token'        => $token,
             'user_id'      => $userId,
             'varName'      => $varName,
             'defaultValue' => $defaultValue,
-        ));
-
-        //validate and preprocess url
-        $_queryUrl = APIHelper::cleanUrl($_queryBuilder);
-
-        //prepare headers
-        $_headers = array (
-            'user-agent'    => 'taplytics',
-            'Accept'        => 'application/json',
-            'content-type'  => 'application/json; charset=utf-8'
-        );
-
-        //call on-before Http callback
-        $_httpRequest = new HttpRequest(HttpMethod::POST, $_headers, $_queryUrl);
-        if ($this->getHttpCallBack() != null) {
-            $this->getHttpCallBack()->callOnBeforeRequest($_httpRequest);
-        }
-
-        //and invoke the API call request to fetch the response
-        $response = Request::post($_queryUrl, $_headers, Request\Body::Json($body));
-
-        $_httpResponse = new HttpResponse($response->code, $response->headers, $response->raw_body);
-        $_httpContext = new HttpContext($_httpRequest, $_httpResponse);
-
-        //call on-after Http callback
-        if ($this->getHttpCallBack() != null) {
-            $this->getHttpCallBack()->callOnAfterRequest($_httpContext);
-        }
-
-        //handle errors defined at the API level
-        $this->validateResponse($_httpResponse, $_httpContext);
-
-        return $response->body;
+        ), $body);
     }
 
     /**
@@ -255,43 +154,10 @@ class APIController extends BaseController
         //prepare query string for API call
         $_queryBuilder = $_queryBuilder.'/bucketing';
 
-        //process optional query parameters
-        APIHelper::appendUrlWithQueryParameters($_queryBuilder, array (
+        return $this->apiHelper->createRequest($_queryBuilder, array(
             'token'   => $token,
             'user_id' => $userId,
-        ));
-
-        //validate and preprocess url
-        $_queryUrl = APIHelper::cleanUrl($_queryBuilder);
-
-        //prepare headers
-        $_headers = array (
-            'user-agent'    => 'taplytics',
-            'Accept'        => 'application/json',
-            'content-type'  => 'application/json; charset=utf-8'
-        );
-
-        //call on-before Http callback
-        $_httpRequest = new HttpRequest(HttpMethod::POST, $_headers, $_queryUrl);
-        if ($this->getHttpCallBack() != null) {
-            $this->getHttpCallBack()->callOnBeforeRequest($_httpRequest);
-        }
-
-        //and invoke the API call request to fetch the response
-        $response = Request::post($_queryUrl, $_headers, Request\Body::Json($body));
-
-        $_httpResponse = new HttpResponse($response->code, $response->headers, $response->raw_body);
-        $_httpContext = new HttpContext($_httpRequest, $_httpResponse);
-
-        //call on-after Http callback
-        if ($this->getHttpCallBack() != null) {
-            $this->getHttpCallBack()->callOnAfterRequest($_httpContext);
-        }
-
-        //handle errors defined at the API level
-        $this->validateResponse($_httpResponse, $_httpContext);
-
-        return $response->body;
+        ), $body);
     }
 
     /**
@@ -315,45 +181,12 @@ class APIController extends BaseController
         $_queryBuilder = Configuration::$BASEURI;
         
         //prepare query string for API call
-        $_queryBuilder = $_queryBuilder.'/events';
+        $_queryBuilder = $_queryBuilder.'/sendevent';
 
-        //process optional query parameters
-        APIHelper::appendUrlWithQueryParameters($_queryBuilder, array (
+        return $this->apiHelper->createRequest($_queryBuilder, array(
             'token'   => $token,
             'user_id' => $userId,
-        ));
-
-        //validate and preprocess url
-        $_queryUrl = APIHelper::cleanUrl($_queryBuilder);
-
-        //prepare headers
-        $_headers = array (
-            'user-agent'    => 'taplytics',
-            'Accept'        => 'application/json',
-            'content-type'  => 'application/json; charset=utf-8'
-        );
-
-        //call on-before Http callback
-        $_httpRequest = new HttpRequest(HttpMethod::POST, $_headers, $_queryUrl);
-        if ($this->getHttpCallBack() != null) {
-            $this->getHttpCallBack()->callOnBeforeRequest($_httpRequest);
-        }
-
-        //and invoke the API call request to fetch the response
-        $response = Request::post($_queryUrl, $_headers, Request\Body::Json($body));
-
-        $_httpResponse = new HttpResponse($response->code, $response->headers, $response->raw_body);
-        $_httpContext = new HttpContext($_httpRequest, $_httpResponse);
-
-        //call on-after Http callback
-        if ($this->getHttpCallBack() != null) {
-            $this->getHttpCallBack()->callOnAfterRequest($_httpContext);
-        }
-
-        //handle errors defined at the API level
-        $this->validateResponse($_httpResponse, $_httpContext);
-
-        return $response->body;
+        ), $body);
     }
 
     /**
@@ -378,42 +211,57 @@ class APIController extends BaseController
         //prepare query string for API call
         $_queryBuilder = $_queryBuilder.'/config';
 
-        //process optional query parameters
-        APIHelper::appendUrlWithQueryParameters($_queryBuilder, array (
+        return $this->apiHelper->createRequest($_queryBuilder, array(
             'token'   => $token,
             'user_id' => $userId,
-        ));
+        ), $body);
+    }
 
-        //validate and preprocess url
-        $_queryUrl = APIHelper::cleanUrl($_queryBuilder);
+    /**
+     * Returns the feature flags. Any feature flags that are enabled are returned in this function
+     *
+     * @param string      $token   SDK token for the project
+     * @param string      $userId  ID for given user
+     * @param Models\Body $body    (optional) All relevant attributes associated with the user
+     * @return mixed response from the API call
+     * @throws APIException Thrown if API call fails
+     */
+    public function createGetFeatureFlags(
+        $token,
+        $userId,
+        $body = null
+    ) {
 
-        //prepare headers
-        $_headers = array (
-            'user-agent'    => 'taplytics',
-            'Accept'        => 'application/json',
-            'content-type'  => 'application/json; charset=utf-8'
-        );
+        $_queryBuilder = Configuration::$BASEURI;        
+        $_queryBuilder = $_queryBuilder.'/featureflags';
 
-        //call on-before Http callback
-        $_httpRequest = new HttpRequest(HttpMethod::POST, $_headers, $_queryUrl);
-        if ($this->getHttpCallBack() != null) {
-            $this->getHttpCallBack()->callOnBeforeRequest($_httpRequest);
+        return $this->apiHelper->createRequest($_queryBuilder, array(
+            'token'   => $token,
+            'user_id' => $userId,
+        ), $body);
+    }
+
+    /**
+     * Returns true/false if the feature flag is enabled or not.
+     * 
+     * @param string      $token   SDK token for the project
+     * @param string      $userId  ID for given user
+     * @param Models\Body $body    (optional) All relevant attributes associated with the user
+     * @return mixed response from the API call
+     * @throws APIException Thrown if API call fails
+     */
+    public function isFeatureFlagEnabled(
+        $token, 
+        $userId, 
+        $keyName, 
+        $body = null
+    ) {
+        $featureFlags = $this->createGetFeatureFlags($token, $userId, $body);
+        foreach ($featureFlags as $flagObj) {
+            if ($keyName == $flagObj->keyName) {
+                return true;
+            }
         }
-
-        //and invoke the API call request to fetch the response
-        $response = Request::post($_queryUrl, $_headers, Request\Body::Json($body));
-
-        $_httpResponse = new HttpResponse($response->code, $response->headers, $response->raw_body);
-        $_httpContext = new HttpContext($_httpRequest, $_httpResponse);
-
-        //call on-after Http callback
-        if ($this->getHttpCallBack() != null) {
-            $this->getHttpCallBack()->callOnAfterRequest($_httpContext);
-        }
-
-        //handle errors defined at the API level
-        $this->validateResponse($_httpResponse, $_httpContext);
-
-        return $response->body;
+        return false;
     }
 }
