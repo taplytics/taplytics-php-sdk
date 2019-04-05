@@ -203,10 +203,29 @@ function postEvent(
 ```php
 $token = 'token';
 $userId = 'user_id';
-$body = new EventsBody();
+$body = array(
+	'events' => array(
+	        		array('eventName' => 'event name!', 'eventValue' => 5)
+				)
+);
 
 $result = $client->postEvent($token, $userId, $body);
 
+```
+
+The format for passing in events is as follows:
+
+```
+{
+	attributes: {
+		name: '',
+		...
+	},
+	events: [
+		{eventName: '', eventValue},
+		...
+	]
+}
 ```
 
 
