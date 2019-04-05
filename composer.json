@@ -4,7 +4,7 @@
     "description": "Taplytics PHP SDK for fast A/B testing and Feature Flagging",
     "keywords": ["Taplytics Decisions API","API","PHP","SDK"],
     "homepage": "http://decisions-docs.taplytics.com",
-    "license": "http://taplytics.com/license",
+    "license": "MIT",
     "authors": [
         {
             "name": "Taplytics",
