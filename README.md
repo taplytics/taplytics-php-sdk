@@ -2,7 +2,7 @@
 
 # Getting started
 
-Taplytics decisions is an API to quickly use Taplytics features and functionality at edge.
+Taplytics Universal API enables you to quickly use Taplytics features and functionality at edge.
 
 ## How to Build
 
