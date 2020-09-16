@@ -2,7 +2,7 @@
 
 # Getting started
 
-Taplytics PHP SDK enables the delivery server-side experiments, feature flags and functionality at edge.
+Taplytics PHP SDK enables the delivery of server-side experiments, feature flags and functionality at edge.
 
 ## How to Build
 
