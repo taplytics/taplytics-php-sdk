@@ -176,6 +176,7 @@ $result = $client->createGetBucketing($token, $userId, $body);
 ```
 
 
+
 ### postEvent
 
 > Send an event to Taplytics. These events are then used to compare against an experiment's goals to determine the success of an A/B test.
